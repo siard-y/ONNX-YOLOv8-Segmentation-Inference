@@ -1,15 +1,14 @@
 import cv2
-from imread_from_url import imread_from_url
-
 from yoloseg import YOLOSeg
 
 # Initialize YOLOv5 Instance Segmentator
-model_path = "models/yolov8m-seg.onnx"
+model_path = "models/best.onnx"
 yoloseg = YOLOSeg(model_path, conf_thres=0.5, iou_thres=0.3)
 
+image_name = "i1.jpg"
+
 # Read image
-img_url = "https://upload.wikimedia.org/wikipedia/commons/e/e6/Giraffes_at_west_midlands_safari_park.jpg"
-img = imread_from_url(img_url)
+img = cv2.imread("i1.jpg")
 
 # Detect Objects
 boxes, scores, class_ids, masks = yoloseg(img)
@@ -18,5 +17,5 @@ boxes, scores, class_ids, masks = yoloseg(img)
 combined_img = yoloseg.draw_masks(img)
 cv2.namedWindow("Detected Objects", cv2.WINDOW_NORMAL)
 cv2.imshow("Detected Objects", combined_img)
-cv2.imwrite("doc/img/detected_objects.jpg", combined_img)
+cv2.imwrite(f"doc/img/detected_objects{image_name}", combined_img)
 cv2.waitKey(0)
