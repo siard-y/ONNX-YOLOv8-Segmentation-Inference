@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from PIL import Image
 
 class_names = ["rice", "sugarcane"]
 
@@ -67,7 +68,7 @@ def sigmoid(x):
 
 def draw_detections(image, boxes, scores, class_ids, mask_alpha=0.3, mask_maps=None):
     img_height, img_width = image.shape[:2]
-    size = min([img_height, img_width]) * 0.0006
+    size = min([img_height, img_width]) * 0.002
     text_thickness = int(min([img_height, img_width]) * 0.001)
 
     mask_img = draw_masks(image, boxes, class_ids, mask_alpha, mask_maps)
@@ -148,3 +149,16 @@ def draw_comparison(img1, img2, name1, name2, fontsize=2.6, text_thickness=3):
         combined_img = cv2.resize(combined_img, (3840, 2160))
 
     return combined_img
+
+
+def blacken(image, masks):
+    img_array = np.array(image)
+    mask = np.zeros(img_array.shape[:2], dtype=bool)
+    for i in masks:
+        i = np.array(i, dtype=bool)
+        mask = mask | i
+    img_array[~mask] = 0
+
+    img_blackened = Image.fromarray(img_array)
+
+    return img_blackened, mask

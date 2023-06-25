@@ -1,2 +1,4 @@
 opencv-python
-onnxruntime-gpu
+onnxruntime
+numpy
+Pillow
